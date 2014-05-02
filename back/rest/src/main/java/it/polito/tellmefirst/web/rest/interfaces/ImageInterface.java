@@ -108,7 +108,7 @@ public class ImageInterface extends AbsResponseInterface {
     }
     
     private static ImgResponse getEmptyImg(){
-    	return new ImgResponse("", 0, 0);
+    	return new ImgResponse("", 0, 1);
     }
     
     private static JSONObject getJSONAnswer(ImgResponse imgResponse){
