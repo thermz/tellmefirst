@@ -23,6 +23,8 @@ import static it.polito.tellmefirst.classify.Classifier.getOptionalFields;
 import static it.polito.tellmefirst.util.TMFUtils.hasContent;
 import static it.polito.tellmefirst.util.TMFUtils.unchecked;
 import static it.polito.tellmefirst.web.rest.asynchronous.Parallel.parallelListMap;
+import it.polito.tellmefirst.client.Client;
+import it.polito.tellmefirst.exception.TMFOutputException;
 import it.polito.tellmefirst.classify.Classifier;
 import it.polito.tellmefirst.util.PostProcess;
 import it.polito.tellmefirst.util.Ret;

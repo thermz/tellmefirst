@@ -135,7 +135,7 @@ public class Classifier {
 		LOG.debug("[classify] - wikihtml = " + wikihtml);
 		// check if DBpedia endpoints are up
 		dBpediaManager = new DBpediaManager();
-		if (!lang.equals("italian") && !dBpediaManager.isDBpediaEnglishUp()) {
+        if (!lang.equals("english") && !dBpediaManager.isDBpediaEnglishUp()){
 			// comment for local use
 			throw new TMFVisibleException(
 					"DBpedia English service seems to be down, so TellMeFirs can't work "
