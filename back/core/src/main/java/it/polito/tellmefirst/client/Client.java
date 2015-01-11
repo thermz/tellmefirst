@@ -90,7 +90,7 @@ public class Client {
             results = classifyEpub(inputText, file, url, fileName, numOfTopics,lang);
         } else {
             LOG.info("Launch the usual Classifier");
-            results = classifier.classify(inputText, file, url, fileName, numOfTopics,lang);
+            results = classifier.classify(inputText, numOfTopics, lang, false);
         }
 
         LOG.debug("[classify] - END");
@@ -146,11 +146,11 @@ public class Client {
             try {
                 if(totalNumWords>1000){
                     LOG.debug("Text contains "+totalNumWords+" words. We'll use Classify for long texts.");
-                    ArrayList<String[]> chapterResults = classifier.classifyLongText(text, numOfTopics, lang);
+                    ArrayList<String[]> chapterResults = classifier.classifyLongText(text, numOfTopics, lang, false);
                     classificationResults.put(me.getKey().toString(), jsonAdapter(chapterResults));
                 } else {
                     LOG.debug("Text contains "+totalNumWords+" words. We'll use Classify for short texts.");
-                    ArrayList<String[]> chapterResults = classifier.classifyShortText(text, numOfTopics, lang);
+                    ArrayList<String[]> chapterResults = classifier.classifyShortText(text, numOfTopics, lang, false);
                     classificationResults.put(me.getKey().toString(), jsonAdapter(chapterResults));
                 }
             }catch (Exception e){
@@ -235,11 +235,11 @@ public class Client {
             try {
                 if(totalNumWords>1000){
                     LOG.debug("Text contains "+totalNumWords+" words. We'll use Classify for long texts.");
-                    ArrayList<String[]> classificationResults = classifier.classifyLongText(text, numOfTopics, lang);
+                    ArrayList<String[]> classificationResults = classifier.classifyLongText(text, numOfTopics, lang, false);
                     results.put(me.getKey().toString(), classificationResults);
                 } else {
                     LOG.debug("Text contains "+totalNumWords+" words. We'll use Classify for short texts.");
-                    ArrayList<String[]> classificationResults = classifier.classifyShortText(text, numOfTopics, lang);
+                    ArrayList<String[]> classificationResults = classifier.classifyShortText(text, numOfTopics, lang, false);
                     results.put(me.getKey().toString(), classificationResults);
                 }
             }catch (Exception e){
