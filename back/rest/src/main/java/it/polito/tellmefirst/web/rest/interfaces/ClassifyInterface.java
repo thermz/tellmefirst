@@ -23,6 +23,8 @@ import static it.polito.tellmefirst.classify.Classifier.getOptionalFields;
 import static it.polito.tellmefirst.util.TMFUtils.hasContent;
 import static it.polito.tellmefirst.util.TMFUtils.unchecked;
 import static it.polito.tellmefirst.web.rest.asynchronous.Parallel.parallelListMap;
+import it.polito.tellmefirst.client.Client;
+import it.polito.tellmefirst.exception.TMFOutputException;
 import it.polito.tellmefirst.classify.Classifier;
 import it.polito.tellmefirst.util.PostProcess;
 import it.polito.tellmefirst.util.Ret;
@@ -103,7 +105,9 @@ public class ClassifyInterface extends AbsResponseInterface {
     	return unchecked(()-> {
     			LOG.debug("[callClassify] - BEGIN");
     			Classifier classifier = (lang.equals("italian")) ? TMFListener.getItalianClassifier() : TMFListener.getEnglishClassifier();  
-    			List<String[]> topics = classifier.classify(textStr, numTopics, lang, wikihtml);
+			//We create an instance of the Client in order to manage different classification policies
+			Client client = new Client(classifier);
+			List<String[]> topics = client.classify(text, file, url, fileName, numTopics, lang);
     			LOG.debug("[callClassify] - END");
     			return topics;
 		});
