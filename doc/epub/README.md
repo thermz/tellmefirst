@@ -46,19 +46,20 @@ For these reasons, beside the usual classification system, we have also implemen
 
 ### Request URI parameters
 
-| PARAMETER |           DESCRIPTION          |                                                 EXAMPLE                                                 |
-|:---------:|:------------------------------:|:-------------------------------------------------------------------------------------------------------:|
-|    file   |            File path           |                                  @home/tellmefirst/epub/siddartha.epub                                  |
-|  filename |            File name           |                                             “siddartha.epub”                                            |
-|    url    |      Url of the Epub file      | https://www.gutenberg.org/ebooks/2500.epub.noimages?session_id=36ac0e6a27c77bd0bbc509bf09e9a7b95e0cadba |
-| numTopics | Number of topics in the result |                                                    7                                                    |
-|    lang   |      Language of the text      |                                          “english” or “italian”                                         |
+| PARAMETER |           DESCRIPTION          |                EXAMPLE                |
+|:---------:|:------------------------------:|:-------------------------------------:|
+|    file   |            File path           | @home/tellmefirst/epub/siddartha.epub |
+|  filename |            File name           |            “siddartha.epub”           |
+|    url    |      Url of the Epub file      |         http://bit.ly/1B3IcHg         |
+| numTopics | Number of topics in the result |                   7                   |
+|    lang   |      Language of the text      |         “english” or “italian”        |
 
 ### Request example with curl
 
 #### Upload a local file
 
-    curl -F file={file_location} -F fileName=”{file_name}.epub” -F numTopics=3 -F lang=english {server-address}/rest/classifyEpubChapters
+    curl -F file={file_location} -F fileName=”{file_name}.epub”
+    -F numTopics=3 -F lang=english {server-address}/rest/classifyEpubChapters
 
 #### Insert the url of the Epub file
 
