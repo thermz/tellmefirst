@@ -60,10 +60,10 @@ import java.util.Map.Entry;
 
 public class Client {
 
-    /* The Client manages different classification policies, according to type of document, the length of text,
+    /* The Client manages different classification policies, according to the type of document, the length of text,
        and ad hoc choices for specific needs.
 
-       Currently, the Epub classifier is implemented in the Client class in order to simplify the merge of its
+       The Epub classifier is currently implemented in the Client class in order to simplify the merge of its
        features in other TellMeFirst forks. In the future the classification policy for Epub files will be
        defined in a different class. */
     static Log LOG = LogFactory.getLog(Client.class);
@@ -191,8 +191,8 @@ public class Client {
     public HashMap <String, ArrayList<String[]>> classifyEPubChapters(File file, String fileName, String url, int numOfTopics,
                                                                             String lang) throws TMFVisibleException, IOException {
 
-        //The classfyEPubChapter method works when the Epub in case of a well-defined structure in the Toc file.
-        //Otherwise you can use the usual classify method.
+        //The classifyEPubChapters() method works  in case of a well-defined structure in the Toc file.
+        //Otherwise you can use the usual classify() method.
 
         LOG.debug("[classifyEPubChapters] - BEGIN");
 
@@ -600,7 +600,7 @@ public class Client {
 
         List<Entry<String, Integer>> list = new LinkedList<Entry<String, Integer>>(unsortMap.entrySet());
 
-        // Sorting the list based on values
+        //Sorting the list based on values
         Collections.sort(list, new Comparator<Entry<String, Integer>>() {
             public int compare(Entry<String, Integer> o1,
                                Entry<String, Integer> o2) {
@@ -611,7 +611,7 @@ public class Client {
             }
         });
 
-        // Maintaining insertion order with the help of LinkedList
+        //Maintaining insertion order with the help of LinkedList
         HashMap<String, Integer> sortedMap = new LinkedHashMap<>();
         for (Entry<String, Integer> entry : list) {
             sortedMap.put(entry.getKey(), entry.getValue());
@@ -673,7 +673,7 @@ public class Client {
         return result;
     }
 
-    // Print methods for checking the data structures
+    //Print methods for checking data structures
     private void printMap(Map<String, Integer> map) {
 
         for (Entry<String, Integer> entry : map.entrySet()) {
