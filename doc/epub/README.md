@@ -42,21 +42,27 @@ For these reasons, beside the usual classification system, we have also implemen
 |    HEADER    |                     DESCRIPTION                     |     VALID VALUES    |
 |:------------:|:---------------------------------------------------:|:-------------------:|
 |    Accept    |   The MIME type of thereturned data format (JSON)   |   application/json  |
-| Content-Type | Used to encode the data for submission to the server | multipart/form-data |
+| Content-Type | Used to encode the data for submission to the server| multipart/form-data |
 
 ### Request URI parameters
 
-| PARAMETER |           DESCRIPTION          |                EXAMPLE                |
-|:---------:|:------------------------------:|:-------------------------------------:|
-|    file   |            File path           | @home/tellmefirst/epub/siddarhta.epub |
-|  filename |            File name           |            “siddartha.epub”           |
-| numTopics | Number of topics in the result |                   7                   |
-|    lang   |      Language of the text      |         “english” or “italian”        |
+| PARAMETER |           DESCRIPTION          |                                                 EXAMPLE                                                 |
+|:---------:|:------------------------------:|:-------------------------------------------------------------------------------------------------------:|
+|    file   |            File path           |                                  @home/tellmefirst/epub/siddartha.epub                                  |
+|  filename |            File name           |                                             “siddartha.epub”                                            |
+|    url    |      Url of the Epub file      | https://www.gutenberg.org/ebooks/2500.epub.noimages?session_id=36ac0e6a27c77bd0bbc509bf09e9a7b95e0cadba |
+| numTopics | Number of topics in the result |                                                    7                                                    |
+|    lang   |      Language of the text      |                                          “english” or “italian”                                         |
 
 ### Request example with curl
 
+#### Upload a local file
+
     curl -F file={file_location} -F fileName=”{file_name}.epub” -F numTopics=3 -F lang=english {server-address}/rest/classifyEpubChapters
 
+#### Insert the url of the Epub file
+
+    curl -F url={url_of_the_file} -F numTopics=3 -F lang=english {server-address}/rest/classifyEpubChapters
 
 Here you find part of the classifyEpubChapters response on the "Siddartha by Hermann Hesse" ebook, available on the Project Gutenberg website: [http://www.gutenberg.org/ebooks/2500](http://www.gutenberg.org/ebooks/2500). These results are obtained with [DBpedia 3.9](http://wiki.dbpedia.org/Downloads39?show_files=1). 
 

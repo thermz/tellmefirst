@@ -28,6 +28,7 @@ import it.polito.tellmefirst.jaxrs.ClassifyOutput;
 import static java.util.stream.Collectors.toList;
 
 import org.apache.commons.collections.map.LinkedMap;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tika.io.IOUtils;
@@ -46,6 +47,9 @@ import org.xml.sax.ContentHandler;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -63,6 +67,7 @@ public class Client {
        features in other TellMeFirst forks. In the future the classification policy for Epub files will be
        defined in a different class. */
     static Log LOG = LogFactory.getLog(Client.class);
+    private static String TEMPORARY_PATH = "./epub-sample";
     private HashMap<String, String> epub = new LinkedHashMap<>();
     private StringBuilder stringBuilder = new StringBuilder();
     private HashMap<Integer, String> files = new LinkedHashMap<>();
@@ -80,7 +85,7 @@ public class Client {
         LOG.debug("[classify] - BEGIN");
 
         ArrayList<String[]> results;
-        if (file != null && fileName.endsWith("epub")) {
+        if ((file != null && fileName.toLowerCase().endsWith("epub")) || urlIsEpub(url)) {
             LOG.info("Launch the Epub Classifier");
             results = classifyEpub(inputText, file, url, fileName, numOfTopics,lang);
         } else {
@@ -99,6 +104,7 @@ public class Client {
 
         LOG.debug("[classifyEpub] - BEGIN");
 
+        File epubFile;
         dBpediaManager = new DBpediaManager();
         if (!lang.equals("english") && !dBpediaManager.isDBpediaEnglishUp()){
             throw new TMFVisibleException("DBpedia English service seems to be down, so TellMeFirst can't work " +
@@ -109,13 +115,17 @@ public class Client {
                         " properly. Please try later!");
             }
         }
-
+        if (url != null) {
+            epubFile = fromURLtoFile(url);
+        } else {
+            epubFile = file;
+        }
         ArrayList<String[]> results;
         results = new ArrayList<>();
 
         HashMap <String, String> parserResults = new LinkedHashMap<>();
         try {
-            parserResults = parseEpub(file);
+            parserResults = parseEpub(epubFile);
         } catch (IOException e) {
             LOG.error("[classifyEpub] - EXCEPTION: ", e);
             throw new TMFVisibleException("The Epub parser cannot read the file.");
@@ -172,12 +182,13 @@ public class Client {
      *
      * @param file the input file
      * @param fileName the input filename
+     * @param url the url of the resource
      * @param numOfTopics number of topics to be returned
      * @param lang the language of the text to be classified ("italian" or "english")
      * @return A HashMap in which the key is a string with the title of the chapter and the value
      *         is a list of the results of the classification process
      */
-    public HashMap <String, ArrayList<String[]>> classifyEPubChapters(File file, String fileName, int numOfTopics,
+    public HashMap <String, ArrayList<String[]>> classifyEPubChapters(File file, String fileName, String url, int numOfTopics,
                                                                             String lang) throws TMFVisibleException, IOException {
 
         //The classfyEPubChapter method works when the Epub in case of a well-defined structure in the Toc file.
@@ -185,8 +196,14 @@ public class Client {
 
         LOG.debug("[classifyEPubChapters] - BEGIN");
 
-        if(!(fileName.endsWith(".epub") || fileName.endsWith(".EPUB"))){
-            throw new TMFVisibleException("File extension not valid: only 'epub' allowed.");
+        File epubFile;
+        if (url != null) {
+            epubFile = fromURLtoFile(url);
+        } else {
+            epubFile = file;
+        }
+        if(!(file != null && fileName.toLowerCase().endsWith(".epub") || urlIsEpub(url))){
+            throw new TMFVisibleException("Resource not valid: only epub files allowed.");
         }
         dBpediaManager = new DBpediaManager();
         if (!lang.equals("english") && !dBpediaManager.isDBpediaEnglishUp()){
@@ -202,12 +219,16 @@ public class Client {
         }
         HashMap <String, ArrayList<String[]>> results = new LinkedHashMap<>();
         HashMap<String, String> parserResults = new LinkedHashMap<String, String>();
-        parserResults = parseEpub(file);
+        parserResults = parseEpub(epubFile);
         Set set = parserResults.entrySet();
         Iterator i = set.iterator();
         while (i.hasNext()){
             Map.Entry me = (Map.Entry)i.next();
             Text text = new Text((me.getValue().toString()));
+            LOG.debug("* Title of the chapter");
+            LOG.debug(me.getKey().toString());
+            LOG.debug("* Text of the chapter");
+            LOG.debug(me.getValue().toString().substring(0, 100));
             String textString = text.getText();
             int totalNumWords = TMFUtils.countWords(textString);
             LOG.debug("TOTAL WORDS: "+totalNumWords);
@@ -370,6 +391,8 @@ public class Client {
             LOG.error("Unable to extract text from this Epub");
             throw new TMFVisibleException("Unable to extract any text from this Epub.");
         }
+
+        removeDownloadedFile(TEMPORARY_PATH);
 
         LOG.debug("[parseEpub] - END");
 
@@ -670,6 +693,77 @@ public class Client {
         for (Entry<String, String> entry : map.entrySet()) {
             LOG.info("Key : " + entry.getKey() + " Value : " + entry.getValue());
         }
+
+    }
+
+    private Boolean urlIsEpub(String url) {
+
+        LOG.debug("[checkURL] - BEGIN");
+
+        Boolean isEpub = false;
+        URL epubUrl;
+        String type;
+
+        try {
+            epubUrl = new URL(url);
+            URLConnection urlConnection = epubUrl.openConnection();
+            type = urlConnection.getContentType();
+            if (type.equals("application/epub+zip"))
+                isEpub = true;
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        LOG.debug("[checkURL] - END");
+
+        return  isEpub;
+
+    }
+
+    private File fromURLtoFile(String url) throws TMFVisibleException {
+
+        LOG.debug("[fromURLtoFile] - BEGIN");
+
+        URL epubUrl;
+        File file;
+        try {
+            epubUrl = new URL(url);
+        } catch (MalformedURLException e) {
+            LOG.error("[classifyEpub] - EXCEPTION: ", e);
+            throw new TMFVisibleException("Epub URL is malformed");
+        }
+        try {
+            file = new File(TEMPORARY_PATH);
+            file.createNewFile();
+            FileUtils.copyURLToFile(epubUrl, file);
+        } catch (IOException e) {
+            LOG.error("[classifyEpub] - EXCEPTION: ", e);
+            throw new TMFVisibleException("Cannot read the Epub file");
+        }
+
+        LOG.debug("[fromURLtoFile] - END");
+
+        return file;
+    }
+
+    private void removeDownloadedFile(String path) {
+
+        LOG.debug("[removeDownloadedFile] - BEGIN");
+
+        File file = new File(path);
+
+        if(!(file.exists() && !file.isDirectory()))
+            return;
+
+        if(file.delete()){
+            LOG.debug(file.getName() + " is deleted!");
+        }else{
+            LOG.debug("Delete operation is failed.");
+        }
+
+        LOG.debug("[removeDownloadedFile] - END");
 
     }
 
