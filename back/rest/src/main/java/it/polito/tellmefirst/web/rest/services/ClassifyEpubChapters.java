@@ -26,13 +26,14 @@ public class ClassifyEpubChapters {
     @Produces(MediaType.APPLICATION_JSON)
     public Response postJSON(@FormDataParam("file") File file,
                              @FormDataParam("fileName") String fileName,
+                             @FormDataParam("url") String url,
                              @FormDataParam("numTopics") int numTopics,
                              @FormDataParam("lang") String lang) {
         LOG.debug("[postJSON] - BEGIN");
         LOG.info("Classify Epub chapters REST Service called.");
         try {
             long startTime = System.currentTimeMillis();
-            String response = ePubChaptersInterface.getJSON(file, fileName, numTopics, lang);
+            String response = ePubChaptersInterface.getJSON(file, fileName, url, numTopics, lang);
             long endTime = System.currentTimeMillis();
             long duration = (endTime - startTime) / 1000;
             //no prod

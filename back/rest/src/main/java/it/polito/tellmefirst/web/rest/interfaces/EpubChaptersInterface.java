@@ -18,12 +18,12 @@ import java.util.*;
 public class EpubChaptersInterface extends AbsResponseInterface {
     static Log LOG = LogFactory.getLog(ClassifyInterface.class);
 
-    public String getJSON(File file, String fileName, int numTopics, String lang) throws Exception {
+    public String getJSON(File file, String fileName, String url, int numTopics, String lang) throws Exception {
 
         LOG.debug("[getJSON] - BEGIN");
 
         String result;
-        String xml = getXML(file, fileName, numTopics, lang);
+        String xml = getXML(file, fileName, url, numTopics, lang);
         result = xml2json(xml);
         LOG.info("--------Result from Classify--------");
         LOG.info(result);
@@ -33,14 +33,14 @@ public class EpubChaptersInterface extends AbsResponseInterface {
         return result;
     }
 
-    public String getXML(File file, String fileName, int numTopics, String lang) throws TMFVisibleException, TMFOutputException, IOException, InterruptedException {
+    public String getXML(File file, String fileName, String url, int numTopics, String lang) throws TMFVisibleException, TMFOutputException, IOException, InterruptedException {
 
         LOG.debug("[getXML] - BEGIN");
         String result;
 
         Classifier classifier = (lang.equals("italian")) ? TMFServer.getItalianClassifier() : TMFServer.getEnglishClassifier();
         Client client = new Client(classifier);
-        HashMap<String, ArrayList<String[]>> chapters = client.classifyEPubChapters(file, fileName, numTopics, lang);
+        HashMap<String, ArrayList<String[]>> chapters = client.classifyEPubChapters(file, fileName, url, numTopics, lang);
         result = produceXML(chapters);
         LOG.debug("[getXML] - END");
 
