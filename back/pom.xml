@@ -1,56 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<properties>
-		<tellmefirst.version>1.04</tellmefirst.version>
-		<heapspace.Xmx.compiler>-Xmx2g</heapspace.Xmx.compiler>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.compiler.version>1.8</java.compiler.version>
+    <properties>
+        <tellmefirst.version>1.04</tellmefirst.version>
+        <heapspace.Xmx.compiler>-Xmx2g</heapspace.Xmx.compiler>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.compiler.version>1.8</java.compiler.version>
 		<maven.test.skip>true</maven.test.skip>
-	</properties>
+    </properties>
 
-	<groupId>it.polito.tellmefirst</groupId>
-	<artifactId>tellmefirst</artifactId>
+    <groupId>it.polito.tellmefirst</groupId>
+    <artifactId>tellmefirst</artifactId>
 	<version>1.0.5</version>
-	<packaging>pom</packaging>
-	<name>TellMeFirst (parent POM)</name>
+    <packaging>pom</packaging>
+    <name>TellMeFirst (parent POM)</name>
 
-	<modules>
-		<module>core</module>
-		<module>rest</module>
+    <modules>
+        <module>core</module>
+        <module>rest</module>
 		<module>tmfpak</module>
-	</modules>
+    </modules>
 
-	<build>
+    <build>
 
 		<pluginManagement>
-			<plugins>
+        <plugins>
 
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
 					<version>2.3.2</version>
-					<configuration>
-						<source>${java.compiler.version}</source>
-						<target>${java.compiler.version}</target>
+                <configuration>
+                    <source>${java.compiler.version}</source>
+                    <target>${java.compiler.version}</target>
 						<!-- <compilerArgument>-proc:none</compilerArgument> -->
-					</configuration>
-				</plugin>
+                </configuration>
+            </plugin>
 
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-surefire-plugin</artifactId>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
 					<version>2.12</version>
-					<configuration>
+                <configuration>
 						<skipTests>${maven.test.skip}</skipTests>
-					</configuration>
-				</plugin>
+                </configuration>
+            </plugin>
 
-			</plugins>
+        </plugins>
 		</pluginManagement>
-
 	</build>
 
 	<!-- <dependencyManagement> -->
@@ -88,7 +87,7 @@
 	<!-- </pluginRepository> -->
 	<!-- </pluginRepositories> -->
 
-	<repositories>
+    <repositories>
 		<repository>
 			<!-- per ora si cerca il repo in ../ , vedere se riesce ad ottenere project.parent.basedir -->
 			<id>LocalRepo</id>
@@ -96,38 +95,38 @@
 			<url>file://${basedir}/../lib</url>
 		</repository>
 
-		<repository>
-			<id>maven2-repository.dev.java.net</id>
-			<name>Java.net Repository for Maven</name>
-			<url>http://download.java.net/maven/2/</url>
-			<layout>default</layout>
-		</repository>
+        <repository>
+            <id>maven2-repository.dev.java.net</id>
+            <name>Java.net Repository for Maven</name>
+            <url>http://download.java.net/maven/2/</url>
+            <layout>default</layout>
+        </repository>
 
-		<repository>
-			<id>json-lib</id>
-			<url>http://json-lib.sourceforge.net</url>
-		</repository>
+        <repository>
+            <id>json-lib</id>
+            <url>http://json-lib.sourceforge.net</url>
+        </repository>
 
-		<repository>
-			<id>anonsvn</id>
-			<url>http://anonsvn.icefaces.org/repo/maven2/releases/</url>
-		</repository>
+        <repository>
+            <id>anonsvn</id>
+            <url>http://anonsvn.icefaces.org/repo/maven2/releases/</url>
+        </repository>
 
-		<repository>
-			<id>central</id>
-			<name>Maven Repository Switchboard</name>
-			<layout>default</layout>
-			<url>http://repo1.maven.org/maven2</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
+        <repository>
+            <id>central</id>
+            <name>Maven Repository Switchboard</name>
+            <layout>default</layout>
+            <url>http://repo1.maven.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
 
-		<repository>
+        <repository>
 			<id>opennlp.sf.net</id>
 			<url>http://opennlp.sourceforge.net/maven2/</url>
-		</repository>
+        </repository>
 
-	</repositories>
+    </repositories>
 
 </project>
