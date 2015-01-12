@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package it.polito.tellmefirst.client;
+package it.polito.tellmefirst.clients;
 
 import it.polito.tellmefirst.classify.Classifier;
 import it.polito.tellmefirst.classify.Text;
@@ -60,12 +60,9 @@ import java.util.Map.Entry;
 
 public class Client {
 
-    /* The Client manages different classification policies, according to the type of document, the length of text,
-       and ad hoc choices for specific needs.
-
-       The Epub classifier is currently implemented in the Client class in order to simplify the merge of its
-       features in other TellMeFirst forks. In the future the classification policy for Epub files will be
-       defined in a different class. */
+    /*
+       The Epub classifier is currently implemented in the Client. In the future the classification policy
+       for Epub files will be defined in a different class. */
     static Log LOG = LogFactory.getLog(Client.class);
     private static String TEMPORARY_PATH = "./epub-sample";
     private HashMap<String, String> epub = new LinkedHashMap<>();
@@ -79,32 +76,27 @@ public class Client {
         this.classifier = c;
     }
 
-    public ArrayList<String[]> classify(String inputText, File file, String url, String fileName,
-                                        int numOfTopics, String lang) throws TMFVisibleException {
-
-        LOG.debug("[classify] - BEGIN");
-
-        ArrayList<String[]> results;
-        if ((file != null && fileName.toLowerCase().endsWith("epub")) || urlIsEpub(url)) {
-            LOG.info("Launch the Epub Classifier");
-            results = classifyEpub(inputText, file, url, fileName, numOfTopics,lang);
-        } else {
-            LOG.info("Launch the usual Classifier");
-            results = classifier.classify(inputText, file, url, fileName, numOfTopics,lang);
-        }
-
-        LOG.debug("[classify] - END");
-
-        return results;
-    }
-
-    private ArrayList<String[]> classifyEpub(String inputText, File file, String url, String fileName,
+    /**
+     * Classify an Epub document.
+     *
+     * @param file the input file
+     * @param fileName the input filename
+     * @param url the url of the resource
+     * @param numOfTopics number of topics to be returned
+     * @param lang the language of the text to be classified ("italian" or "english")
+     * @return A HashMap in which the key is a string with the title of the chapter and the value
+     *         is a list of the results of the classification process
+     */
+    public ArrayList<String[]> classifyEpub(File file, String fileName, String url,
                                              int numOfTopics, String lang)
                                                                throws TMFVisibleException {
 
         LOG.debug("[classifyEpub] - BEGIN");
 
-        File epubFile;
+        if(!(file != null && fileName.toLowerCase().endsWith(".epub") || urlIsEpub(url))){
+            throw new TMFVisibleException("Resource not valid: only epub files allowed.");
+        }
+
         dBpediaManager = new DBpediaManager();
         if (!lang.equals("english") && !dBpediaManager.isDBpediaEnglishUp()){
             throw new TMFVisibleException("DBpedia English service seems to be down, so TellMeFirst can't work " +
@@ -115,6 +107,7 @@ public class Client {
                         " properly. Please try later!");
             }
         }
+        File epubFile;
         if (url != null) {
             epubFile = fromURLtoFile(url);
         } else {
@@ -196,15 +189,10 @@ public class Client {
 
         LOG.debug("[classifyEPubChapters] - BEGIN");
 
-        File epubFile;
-        if (url != null) {
-            epubFile = fromURLtoFile(url);
-        } else {
-            epubFile = file;
-        }
         if(!(file != null && fileName.toLowerCase().endsWith(".epub") || urlIsEpub(url))){
             throw new TMFVisibleException("Resource not valid: only epub files allowed.");
         }
+
         dBpediaManager = new DBpediaManager();
         if (!lang.equals("english") && !dBpediaManager.isDBpediaEnglishUp()){
             //comment for local use
@@ -216,6 +204,12 @@ public class Client {
                 throw new TMFVisibleException("DBpedia Italian service seems to be down, so TellMeFirst can't work" +
                         " properly. Please try later!");
             }
+        }
+        File epubFile;
+        if (url != null) {
+            epubFile = fromURLtoFile(url);
+        } else {
+            epubFile = file;
         }
         HashMap <String, ArrayList<String[]>> results = new LinkedHashMap<>();
         HashMap<String, String> parserResults = new LinkedHashMap<String, String>();

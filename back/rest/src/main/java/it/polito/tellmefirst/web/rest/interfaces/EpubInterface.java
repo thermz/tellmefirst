@@ -1,7 +1,7 @@
-/**
+/*
  * TellMeFirst - A Knowledge Discovery Application
  *
- * Copyright (C) 2012 Federico Cairo, Giuseppe Futia, Federico Benedetto
+ * Copyright (C) 2014 Giuseppe Futia, Alessio Melandri
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -19,6 +19,7 @@
 
 package it.polito.tellmefirst.web.rest.interfaces;
 
+import it.polito.tellmefirst.clients.Client;
 import it.polito.tellmefirst.exception.TMFOutputException;
 import it.polito.tellmefirst.classify.Classifier;
 import it.polito.tellmefirst.exception.TMFVisibleException;
@@ -31,18 +32,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Federico Cairo
- */
-public class ClassifyInterface extends AbsResponseInterface {
+public class EpubInterface extends AbsResponseInterface {
 
-    static Log LOG = LogFactory.getLog(ClassifyInterface.class);
+    static Log LOG = LogFactory.getLog(EpubInterface.class);
 
-    public String getJSON(String text, File file, String url, String fileName, int numTopics, String lang) throws Exception {
+    public String getJSON(File file, String fileName, String url, int numTopics, String lang) throws Exception {
         LOG.debug("[getJSON] - BEGIN");
         String result;
-        String xml = getXML(text, file, url, fileName, numTopics, lang);
+        String xml = getXML(file, fileName, url, numTopics, lang);
         result = xml2json(xml);
         //no prod
         LOG.info("--------Result from Classify--------");
@@ -51,11 +48,13 @@ public class ClassifyInterface extends AbsResponseInterface {
         return result;
     }
 
-    public String getXML(String text, File file, String url, String fileName, int numTopics, String lang) throws TMFVisibleException, TMFOutputException {
+    public String getXML(File file, String fileName, String url, int numTopics, String lang) throws TMFVisibleException, TMFOutputException {
+
         LOG.debug("[getXML] - BEGIN");
         String result;
         Classifier classifier = (lang.equals("italian")) ? TMFServer.getItalianClassifier() : TMFServer.getEnglishClassifier();
-        ArrayList<String[]> topics = classifier.classify(text, file, url, fileName, numTopics, lang);
+        Client client = new Client(classifier);
+        ArrayList<String[]> topics = client.classifyEpub(file, fileName, url, numTopics, lang);
         result = produceXML(topics);
         LOG.debug("[getXML] - END");
         return result;
@@ -68,7 +67,7 @@ public class ClassifyInterface extends AbsResponseInterface {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             TransformerHandler hd = initXMLDoc(out);
             AttributesImpl atts = new AttributesImpl();
-            atts.addAttribute("","","service","","Classify");
+            atts.addAttribute("","","service","","ClassifyEpub");
             hd.startElement("","","Classification",atts);
             int i=0;
             for (String[] topic : topics){

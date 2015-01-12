@@ -20,7 +20,7 @@
 package it.polito.tellmefirst.web.rest.services;
 
 import com.sun.jersey.multipart.FormDataParam;
-import it.polito.tellmefirst.web.rest.interfaces.EpubChaptersInterface;
+import it.polito.tellmefirst.web.rest.interfaces.EpubInterface;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -30,11 +30,11 @@ import javax.ws.rs.core.Response;
 import java.io.File;
 
 
-@Path("/classifyEpubChapters")
-public class ClassifyEpubChapters {
+@Path("/classifyEpub")
+public class ClassifyEpub {
 
-    static Log LOG = LogFactory.getLog(Classify.class);
-    private static EpubChaptersInterface ePubChaptersInterface = new EpubChaptersInterface();
+    static Log LOG = LogFactory.getLog(ClassifyEpub.class);
+    private static EpubInterface ePubInterface = new EpubInterface();
 
     private Response ok(String response) {
         return Response.ok().entity(response).header("Access-Control-Allow-Origin","*").build();
@@ -49,14 +49,14 @@ public class ClassifyEpubChapters {
                              @FormDataParam("numTopics") int numTopics,
                              @FormDataParam("lang") String lang) {
         LOG.debug("[postJSON] - BEGIN");
-        LOG.info("Classify Epub chapters REST Service called.");
+        LOG.info("Classify Epub REST Service called.");
         try {
             long startTime = System.currentTimeMillis();
-            String response = ePubChaptersInterface.getJSON(file, fileName, url, numTopics, lang);
+            String response = ePubInterface.getJSON(file, fileName, url, numTopics, lang);
             long endTime = System.currentTimeMillis();
             long duration = (endTime - startTime) / 1000;
             //no prod
-            LOG.info("########### Classification Epub chapters "+duration+" seconds. ###########");
+            LOG.info("########### Classification Epub "+duration+" seconds. ###########");
             LOG.debug("[postJSON] - END");
             return ok(response);
         } catch (Exception e) {
