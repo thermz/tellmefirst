@@ -17,11 +17,7 @@
 	<packaging>pom</packaging>
 	<name>TellMeFirst (parent POM)</name>
 
-	<modules>
-		<module>core</module>
-		<module>rest</module>
-		<module>tmfpak</module>
-	</modules>
+	<modules></modules>
 
 	<build>
 

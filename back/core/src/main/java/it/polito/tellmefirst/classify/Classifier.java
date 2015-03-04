@@ -497,16 +497,9 @@ public class Classifier {
 	@SuppressWarnings("serial")
 	public static Map<String, String> getOptionalFields(final String uri, final String label, String ... params){
 	
-		final Ret<String> fetchVideo = new Ret<String>() {
-			public String ret() throws Exception {
-				return new Enhancer().getVideoFromYouTube(uri, label);
-			}
-		};
-		final Ret<String> fetchImage = new Ret<String>() {
-			public String ret() throws Exception {
-				return new Enhancer().getImageFromMediaWiki2(label);
-			}
-		};
+		Ret<String> fetchVideo = () -> new Enhancer().getVideoFromYouTube(uri, label);
+		Ret<String> fetchImage = () -> new Enhancer().getImageFromMediaWiki2(label);
+		
 		Map<String, Ret<String>> optionalValuesBinding = new HashMap<String, Ret<String>>(){{
 			put(ALTERNATIVE_IMAGE, 	fetchImage);
 			put(YOUTUBE_VIDEO,		fetchVideo);
