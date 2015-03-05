@@ -22,7 +22,7 @@ public class DefaultWikiDAO implements WikiDAO {
 		String xml = rm.getStringFromAPI(getWikiURL(searchText));
         Document doc = Jsoup.parse(xml);
         Elements elementsFound = doc.getElementsByTag("im");
-        List<String> imagesFound = new ArrayList<String>();
+        List<String> imagesFound = new ArrayList<>();
 		elementsFound.forEach((e) -> {
 			imagesFound.add(e.attr("title"));
 		});

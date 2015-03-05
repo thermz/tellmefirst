@@ -24,26 +24,21 @@ import static it.polito.tellmefirst.util.TMFUtils.hasContent;
 import static it.polito.tellmefirst.util.TMFUtils.unchecked;
 import static it.polito.tellmefirst.web.rest.asynchronous.Parallel.parallelListMap;
 import it.polito.tellmefirst.classify.Classifier;
-import it.polito.tellmefirst.util.PostProcess;
-import it.polito.tellmefirst.util.Ret;
 import it.polito.tellmefirst.web.rest.TMFListener;
 import it.polito.tellmefirst.web.rest.guice.GuiceEnv;
 import it.polito.tellmefirst.web.rest.images.ImagePolicyDAO;
-import it.polito.tellmefirst.web.rest.images.ImagePolicyDAOImpl;
 import it.polito.tellmefirst.web.rest.interfaces.ImageInterface.ImgResponse;
 import it.polito.tellmefirst.web.rest.services.Classify.ImagePolicy;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 
-import scala.actors.threadpool.Arrays;
 
 /**
  * Created by IntelliJ IDEA.
