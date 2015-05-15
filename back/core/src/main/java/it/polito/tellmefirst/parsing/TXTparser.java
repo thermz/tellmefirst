@@ -58,11 +58,7 @@ public class TXTparser extends TMFTextParser{
 
     @Override
 	public String parse(final File file) {
-		return unchecked(new Ret<String>() {
-			public String ret() throws Exception {
-				return txtToText(file);
-			}
-		}, "txt not parsed");
+		return unchecked(() -> txtToText(file), "txt not parsed");
 	}
 
 }

@@ -19,12 +19,12 @@
 
 package it.polito.tellmefirst.parsing;
 
-import com.gravity.goose.Article;
-import com.gravity.goose.Configuration;
-import com.gravity.goose.Goose;
 import de.jetwick.snacktory.HtmlFetcher;
 import de.jetwick.snacktory.JResult;
+import it.polito.tellmefirst.apimanager.RestManager;
 import it.polito.tellmefirst.exception.TMFVisibleException;
+import static it.polito.tellmefirst.util.TMFUtils.unchecked;
+import java.net.URLEncoder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -54,24 +54,10 @@ public class HTMLparser {
 
 
     public String htmlToTextGoose(String url) throws TMFVisibleException {
-        LOG.debug("[htmlToTextGoose] - BEGIN");
-        String result;
-        try{
-            Configuration conf = new Configuration();
-            conf.setEnableImageFetching(false);
-            Goose goose = new Goose(conf);
-            Article article = goose.extractContent(url);
-            result = article.cleanedArticleText();
-            if(result.equals("")){
-                // call twice to prevent Goose (frequent) malfunctions
-                article = goose.extractContent(url);
-                result = article.cleanedArticleText();
-            }
-        }catch (Exception e){
-            LOG.error("[htmlToTextGoose] - EXCEPTION: ", e);
-            throw new TMFVisibleException("Unable to scrape text from specified URL. Try copying and pasting in the text area!");
-        }
-        LOG.debug("[htmlToTextGoose] - END");
+        LOG.debug("[htmlToTextAE] - BEGIN");
+		String aeUrl = "http://xaas.teamlife.it/tmf/ae/extraction?url="+unchecked(()->URLEncoder.encode(url, "UTF-8"));
+        String result = new RestManager().getStringFromAPI(aeUrl);
+        LOG.debug("[htmlToTextAE] - END");
         return result;
     }
 

@@ -68,12 +68,10 @@ public class ImagePolicyDAOImpl implements ImagePolicyDAO {
 	
 	// TODO FIXME XXX Implementare successivamente una classe di accesso alle property applicative.
     private String getAspectRatioWikiURL(final String title) {
-    	return unchecked(new Ret<String>() {
-			public String ret() throws Exception{
+    	return unchecked(()->{
 				String encodedTitle = title;
 				encodedTitle = URLEncoder.encode(title, "UTF-8");
 				return "http://en.wikipedia.org/w/api.php?action=query&titles="+encodedTitle+"&prop=pageimages&format=json";
-			}
 		}, "Wikipedia Ratio URL not resolved!");
     }
 

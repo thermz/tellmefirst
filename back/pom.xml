@@ -18,10 +18,10 @@
 	<name>TellMeFirst (parent POM)</name>
 
 	<modules>
-		<module>core</module>
-		<module>rest</module>
-		<module>tmfpak</module>
-	</modules>
+            <module>core</module>
+            <module>rest</module>
+            <module>tmfpak</module>
+        </modules>
 
 	<build>
 
