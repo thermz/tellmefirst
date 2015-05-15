@@ -20,8 +20,10 @@
 package it.polito.tellmefirst.lodmanager;
 
 import com.hp.hpl.jena.query.*;
+import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openjena.riot.WebContent;
 
 /**
  * Created by IntelliJ IDEA.
@@ -36,7 +38,9 @@ public class JenaSparqlManager {
     public ResultSet executeRemoteQuery(String queryString, String endpoint){
         LOG.debug("[executeRemoteQuery] - BEGIN");
         Query query = QueryFactory.create(queryString);
-        QueryExecution querex = QueryExecutionFactory.sparqlService(endpoint, query);
+        QueryEngineHTTP querex = (QueryEngineHTTP) QueryExecutionFactory.sparqlService(endpoint, query);
+        //QueryExecution querex = QueryExecutionFactory.sparqlService(endpoint, query);
+        querex.setSelectContentType(WebContent.contentTypeResultsJSON);
         ResultSet results = querex.execSelect();
         //ResultSetFormatter.out(System.out, results);
         querex.close() ;

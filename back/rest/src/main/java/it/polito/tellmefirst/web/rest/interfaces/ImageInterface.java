@@ -107,6 +107,7 @@ public class ImageInterface extends AbsResponseInterface {
     						  	   		parseInt(element.attr("height"))), getEmptyImg() );
     }
     
+    
     private static ImgResponse getEmptyImg(){
     	return new ImgResponse("", 0, 1);
     }
